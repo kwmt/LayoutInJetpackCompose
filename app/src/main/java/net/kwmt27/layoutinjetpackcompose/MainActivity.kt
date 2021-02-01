@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Providers
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.text.font.FontWeight
@@ -46,7 +47,9 @@ fun DefaultPreview() {
 
 @Composable
 fun PhotographerCard() {
-    Row {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Surface(
             modifier = Modifier.preferredSize(50.dp),
             shape = CircleShape,
