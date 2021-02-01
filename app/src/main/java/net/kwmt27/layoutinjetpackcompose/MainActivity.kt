@@ -46,8 +46,9 @@ fun DefaultPreview() {
 }
 
 @Composable
-fun PhotographerCard() {
+fun PhotographerCard(modifier: Modifier = Modifier) {
     Row(
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Surface(
