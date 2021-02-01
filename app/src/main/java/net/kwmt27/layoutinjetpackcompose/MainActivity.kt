@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.preferredSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -53,7 +54,9 @@ fun PhotographerCard() {
         ) {
             // image goes here
         }
-        Column {
+        Column(
+            modifier = Modifier.padding(start = 8.dp)
+        ) {
             Text("Alfred Sisley", fontWeight = FontWeight.Bold)
             Providers(AmbientContentAlpha provides ContentAlpha.medium) {
                 Text("3 minutes ago", style = MaterialTheme.typography.body2)
