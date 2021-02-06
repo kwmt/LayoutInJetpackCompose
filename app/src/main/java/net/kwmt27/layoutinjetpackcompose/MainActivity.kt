@@ -1,6 +1,7 @@
 package net.kwmt27.layoutinjetpackcompose
 
 import android.os.Bundle
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.setContent
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -82,6 +84,16 @@ fun PhotographerCard(modifier: Modifier = Modifier) {
 
 }
 
+sealed class Screen(val route: String, val resourceId: String) {
+    object Profile : Screen("profile", "a")
+    object FriendsList : Screen("friendslist", "b")
+}
+
+val items = listOf(
+    Screen.Profile,
+    Screen.FriendsList,
+)
+
 @Composable
 fun LayoutsCodelab() {
     Scaffold(
@@ -94,12 +106,40 @@ fun LayoutsCodelab() {
                     IconButton(onClick = {/*TODO*/ }) {
                         Icon(Icons.Filled.Favorite, contentDescription = null)
                     }
-                }
+                },
             )
+        },
+        bottomBar = {
+            BottomNavigation {
+//                val navBackStackEntry by navController.currentBackStackEntryAsState()
+//                val currentRoute = navBackStackEntry?.arguments?.getString(KEY_ROUTE)
+                items.forEach { screen ->
+                    BottomNavigationItem(
+                        icon = { Icons.Filled.Favorite },
+                        label = { Text(screen.resourceId) },
+                        selected = true,
+//                        selected = currentRoute == screen.route,
+                        onClick = {
+//                            navController.navigate(screen.route) {
+//                                // Pop up to the start destination of the graph to
+//                                // avoid building up a large stack of destinations
+//                                // on the back stack as users select items
+//                                popUpTo = navController.graph.startDestination
+//                                // Avoid multiple copies of the same destination when
+//                                // reselecting the same item
+//                                launchSingleTop = true
+//                            }
+                        },
+                    )
+
+                }
+            }
         }
-    ) { innerPadding ->
-        BodyContent(Modifier.padding(innerPadding))
+    ) {
+        BodyContent()
     }
+
+
 }
 
 @Composable
