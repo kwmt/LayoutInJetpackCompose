@@ -76,12 +76,36 @@ fun PhotographerCard(modifier: Modifier = Modifier) {
             }
         }
     }
+
+}
+
+@Composable
+fun LayoutsCodelab() {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text("LayoutsCodeLab")
+                }
+            )
+        }
+    ) { innerPadding ->
+        BodyContent(Modifier.padding(innerPadding))
+    }
+}
+
+@Composable
+fun BodyContent(modifier: Modifier = Modifier) {
+    Column(modifier = modifier) {
+        Text(text = "Hi there!")
+        Text(text = "Thanks for going through the Layouts codelab")
+    }
 }
 
 @Preview
 @Composable
 fun PhotographerCardPreview() {
     LayoutInJetpackComposeTheme {
-        PhotographerCard()
+        LayoutsCodelab()
     }
 }
