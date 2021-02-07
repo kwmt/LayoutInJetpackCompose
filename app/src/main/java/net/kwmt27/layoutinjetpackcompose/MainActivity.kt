@@ -3,12 +3,10 @@ package net.kwmt27.layoutinjetpackcompose
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.preferredSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -30,16 +28,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import net.kwmt27.layoutinjetpackcompose.ui.theme.LayoutInJetpackComposeTheme
+import kotlin.math.max
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Column(modifier = Modifier.background(Color.Red)) {
-                Text("MyOwnColumn")
-                Text("places items")
-                Text("vertically.")
-                Text("We've done it by hand!")
+            LayoutInJetpackComposeTheme() {
+                StaggeredGrid() {
+                    for (topic in topics) {
+                        Chip(modifier = Modifier.padding(8.dp), text = topic)
+                    }
+                }
             }
 //            MyOwnColumn(modifier = Modifier.background(Color.Red)) {
 //                Text("MyOwnColumn")
@@ -231,6 +231,103 @@ fun MyOwnColumn(
                 // Record the y co-ord placed up to
                 yPosition += placeable.height
                 Log.d("MyOwnColumn", "yPosition:$yPosition")
+            }
+        }
+    }
+}
+
+@Composable
+fun StaggeredGrid(
+    modifier: Modifier = Modifier,
+    rows: Int = 3,
+    children: @Composable() () -> Unit
+) {
+    Layout(
+        modifier = modifier,
+        content = children
+    ) { measurables, constraints ->
+
+        // 行の各アイテムの幅
+        val rowWidths = IntArray(rows) { 0 }
+        // 各行の最大の高さ
+        val rowMaxHeights = IntArray(rows) { 0 }
+
+        val placeables = measurables.mapIndexed { index, measurable ->
+            val placeable = measurable.measure(constraints)
+
+            val row = index % rows
+            rowWidths[row] = rowWidths[row] + placeable.width
+            rowMaxHeights[row] = max(rowMaxHeights[row], placeable.height)
+            placeable
+        }
+
+        // Int.coerceIn(範囲)はIntの値を範囲内に強制します。
+        // Gridの幅が最大のRowの幅
+        val width =
+            rowWidths.maxOrNull()?.coerceIn(constraints.minWidth.rangeTo(constraints.maxWidth))
+                ?: constraints.minWidth
+
+        // 各業の高さを合計したものが、constraints.minHeightとconstraints.maxHeightの範囲内に収めたときの高さ
+        val height = rowMaxHeights.sumBy { it }
+            .coerceIn(constraints.minHeight.rangeTo(constraints.maxHeight))
+
+        Log.d("StaggeredGrid", "$width, $height")
+
+        // 各業の高さ
+        // 前の行の高さから計算する
+        val rowY = IntArray(rows) { 0 }
+        for (i in 1 until rows) {
+            rowY[i] = rowY[i - 1] + rowMaxHeights[i - 1]
+        }
+        layout(width, height) {
+            val rowX = IntArray(rows) { 0 }
+            placeables.forEachIndexed { index, placeable ->
+                val row = index % rows
+                placeable.placeRelative(
+                    x = rowX[row],
+                    y = rowY[row]
+                )
+                rowX[row] += placeable.width
+            }
+        }
+    }
+}
+
+@Composable
+fun Chip(modifier: Modifier = Modifier, text: String) {
+    Card(
+        modifier = modifier,
+        border = BorderStroke(color = Color.Black, width = Dp.Hairline),
+        shape = RoundedCornerShape(8.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(start = 8.dp, top = 4.dp, end = 8.dp, bottom = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .preferredSize(16.dp, 16.dp)
+                    .background(color = MaterialTheme.colors.secondary)
+            )
+            Spacer(Modifier.preferredWidth(4.dp))
+            Text(text = text)
+        }
+    }
+}
+
+val topics = listOf(
+    "Arts & Crafts", "Beauty", "Books", "Business", "Comics", "Culinary",
+    "Design", "Fashion", "Film", "History", "Maths", "Music", "People", "Philosophy",
+    "Religion", "Social sciences", "Technology", "TV", "Writing"
+)
+
+@Preview
+@Composable
+fun ChipPreview() {
+    LayoutInJetpackComposeTheme() {
+        StaggeredGrid {
+            for (topic in topics) {
+                Chip(modifier = Modifier.padding(8.dp), text = topic)
             }
         }
     }
