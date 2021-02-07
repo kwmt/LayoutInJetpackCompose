@@ -1,7 +1,7 @@
 package net.kwmt27.layoutinjetpackcompose
 
 import android.os.Bundle
-import androidx.annotation.StringRes
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,18 +13,18 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Providers
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.AlignmentLine
 import androidx.compose.ui.layout.FirstBaseline
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.setContent
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -35,12 +35,24 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            LayoutInJetpackComposeTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background) {
-                    Greeting("Android")
-                }
+            Column(modifier = Modifier.background(Color.Red)) {
+                Text("MyOwnColumn")
+                Text("places items")
+                Text("vertically.")
+                Text("We've done it by hand!")
             }
+//            MyOwnColumn(modifier = Modifier.background(Color.Red)) {
+//                Text("MyOwnColumn")
+//                Text("places items")
+//                Text("vertically.")
+//                Text("We've done it by hand!")
+//            }
+//            LayoutInJetpackComposeTheme {
+//                // A surface container using the 'background' color from the theme
+//                Surface(color = MaterialTheme.colors.background) {
+//                    Greeting("Android")
+//                }
+//            }
         }
     }
 }
@@ -156,7 +168,7 @@ fun BodyContent(modifier: Modifier = Modifier) {
 
 fun Modifier.firstBaselineToTop(
     firstBaselineToTop: Dp
-) = Modifier.layout {measurable, constraints ->
+) = Modifier.layout { measurable, constraints ->
     val placeable = measurable.measure(constraints)
 
     // Check the composable has a first baseline
@@ -193,5 +205,33 @@ fun TextWithPaddingToBaselinePreview() {
 fun TextWithNormalPaddingPreview() {
     LayoutInJetpackComposeTheme {
         Text("Hi there!", Modifier.padding(top = 32.dp))
+    }
+}
+
+@Composable
+fun MyOwnColumn(
+    modifier: Modifier = Modifier,
+    children: @Composable () -> Unit
+) {
+    Layout(modifier = modifier, content = children) { measurables, constraints ->
+        // 子供Viewをさらに制約しないでください。
+        // 測定された子のリスト
+        val placeables = measurables.map { measurable ->
+            measurable.measure(constraints = constraints)
+        }
+        var yPosition = 0
+        Log.d("MyOwnColumn", "maxWidth:${constraints.maxWidth}, maxHeight:${constraints.maxHeight}")
+        layout(constraints.maxWidth, constraints.maxHeight) {
+            // Place children in the parent layout
+            Log.d("MyOwnColumn", "yPosition:$yPosition")
+            placeables.forEach { placeable ->
+                // Position item on the screen
+                Log.d("MyOwnColumn", "placeable.height:" + placeable.height.toString())
+                placeable.placeRelative(x = 0, y = yPosition)
+                // Record the y co-ord placed up to
+                yPosition += placeable.height
+                Log.d("MyOwnColumn", "yPosition:$yPosition")
+            }
+        }
     }
 }
