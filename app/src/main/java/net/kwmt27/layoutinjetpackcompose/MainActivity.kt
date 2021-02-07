@@ -3,9 +3,7 @@ package net.kwmt27.layoutinjetpackcompose
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,11 +33,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             LayoutInJetpackComposeTheme() {
-                StaggeredGrid() {
-                    for (topic in topics) {
-                        Chip(modifier = Modifier.padding(8.dp), text = topic)
-                    }
-                }
+                BodyContent()
             }
 //            MyOwnColumn(modifier = Modifier.background(Color.Red)) {
 //                Text("MyOwnColumn")
@@ -160,9 +154,12 @@ fun LayoutsCodelab() {
 
 @Composable
 fun BodyContent(modifier: Modifier = Modifier) {
-    Column(modifier = modifier) {
-        Text(text = "Hi there!")
-        Text(text = "Thanks for going through the Layouts codelab")
+    Row(modifier = modifier.horizontalScroll(rememberScrollState())) {
+        StaggeredGrid {
+            for (topic in topics) {
+                Chip(modifier = Modifier.padding(8.dp), text = topic)
+            }
+        }
     }
 }
 
@@ -325,10 +322,7 @@ val topics = listOf(
 @Composable
 fun ChipPreview() {
     LayoutInJetpackComposeTheme() {
-        StaggeredGrid {
-            for (topic in topics) {
-                Chip(modifier = Modifier.padding(8.dp), text = topic)
-            }
-        }
+
+        BodyContent()
     }
 }
