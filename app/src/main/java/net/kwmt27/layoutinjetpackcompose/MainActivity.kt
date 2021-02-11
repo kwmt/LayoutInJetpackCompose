@@ -326,3 +326,31 @@ fun ChipPreview() {
         BodyContent()
     }
 }
+
+@Composable
+fun ConstraintLayoutContent() {
+    ConstraintLayout {
+
+        val (button, text) = createRefs()
+
+        Button(onClick = { /*TODO*/ },
+            modifier = Modifier.constrainAs(button) {
+                top.linkTo(parent.top, margin = 16.dp)
+            }) {
+            Text("Button")
+        }
+
+
+        Text("Text", Modifier.constrainAs(text) {
+            top.linkTo(button.bottom, margin = 16.dp)
+        })
+    }
+}
+
+@Preview
+@Composable
+fun ConstraintLayoutContentPreview() {
+    LayoutInJetpackComposeTheme {
+        ConstraintLayoutContent()
+    }
+}
