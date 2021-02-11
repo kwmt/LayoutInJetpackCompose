@@ -331,10 +331,10 @@ fun ChipPreview() {
 fun ConstraintLayoutContent() {
     ConstraintLayout {
 
-        val (button, text) = createRefs()
+        val (button1, button2, text) = createRefs()
 
         Button(onClick = { /*TODO*/ },
-            modifier = Modifier.constrainAs(button) {
+            modifier = Modifier.constrainAs(button1) {
                 top.linkTo(parent.top, margin = 16.dp)
             }) {
             Text("Button")
@@ -342,9 +342,18 @@ fun ConstraintLayoutContent() {
 
 
         Text("Text", Modifier.constrainAs(text) {
-            top.linkTo(button.bottom, margin = 16.dp)
-            centerHorizontallyTo(parent)
+            top.linkTo(button1.bottom, margin = 16.dp)
+            centerAround(button1.end)
         })
+
+        val barrier = createEndBarrier(button1, text)
+        Button(onClick = { /*TODO*/ },
+        modifier = Modifier.constrainAs(button2) {
+            top.linkTo(parent.top, margin = 16.dp)
+            start.linkTo(barrier)
+        }) {
+            Text("Button2")
+        }
     }
 }
 
