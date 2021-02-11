@@ -2,12 +2,35 @@ package net.kwmt27.layoutinjetpackcompose
 
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.preferredSize
+import androidx.compose.foundation.layout.preferredWidth
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Button
+import androidx.compose.material.Card
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
@@ -20,11 +43,11 @@ import androidx.compose.ui.layout.AlignmentLine
 import androidx.compose.ui.layout.FirstBaseline
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layout
-import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
 import net.kwmt27.layoutinjetpackcompose.ui.theme.LayoutInJetpackComposeTheme
 import kotlin.math.max
 
@@ -86,7 +109,7 @@ fun PhotographerCard(modifier: Modifier = Modifier) {
             modifier = Modifier.padding(start = 8.dp)
         ) {
             Text("Alfred Sisley", fontWeight = FontWeight.Bold)
-            Providers(AmbientContentAlpha provides ContentAlpha.medium) {
+            Providers(LocalContentAlpha provides ContentAlpha.medium) {
                 Text("3 minutes ago", style = MaterialTheme.typography.body2)
             }
         }
@@ -348,14 +371,53 @@ fun ConstraintLayoutContent() {
 
         val barrier = createEndBarrier(button1, text)
         Button(onClick = { /*TODO*/ },
-        modifier = Modifier.constrainAs(button2) {
-            top.linkTo(parent.top, margin = 16.dp)
-            start.linkTo(barrier)
-        }) {
+            modifier = Modifier.constrainAs(button2) {
+                top.linkTo(parent.top, margin = 16.dp)
+                start.linkTo(barrier)
+            }) {
             Text("Button2")
         }
     }
 }
+
+//@Composable
+//fun A() {
+//    ConstraintLayout(
+//        // Make CL fixed width and wrap content height.
+//        modifier = Modifier.fillMaxWidth()
+//    ) {
+//        val (aspectRatioBox, divider) = createRefs()
+//        val guideline = createGuidelineFromAbsoluteLeft(0.5f)
+//
+//        Box(
+//            Modifier
+//                .constrainAs(aspectRatioBox) {
+//                    centerTo(parent)
+//                    start.linkTo(guideline)
+//                    width = Dimension.preferredWrapContent
+//                    height = Dimension.wrapContent
+//                }
+//                // Try to be large to make wrap content impossible.
+//                .preferredWidth((displaySize.width).toDp())
+//                // This could be any (width in height out child) e.g. text
+//                .aspectRatio(2f)
+//                .onGloballyPositioned { coordinates ->
+//                    aspectRatioBoxSize.value = coordinates.size
+//                }
+//        )
+//        Box(
+//            Modifier
+//                .constrainAs(divider) {
+//                    centerTo(parent)
+//                    width = Dimension.value(1.dp)
+//                    height = Dimension.fillToConstraints
+//                }.onGloballyPositioned { coordinates ->
+//                    dividerSize.value = coordinates.size
+//                }
+//        )
+//    }
+//}
+
 
 @Preview
 @Composable
