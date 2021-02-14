@@ -48,6 +48,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import net.kwmt27.layoutinjetpackcompose.ui.theme.LayoutInJetpackComposeTheme
 import kotlin.math.max
 
@@ -436,6 +437,7 @@ fun LargeConstraintLayout() {
             "This is a very very very very very very long text",
             Modifier.constrainAs(text) {
                 linkTo(start = guideline, end = parent.end)
+                width = Dimension.preferredWrapContent
             }
         )
     }
