@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
 //                Surface(color = MaterialTheme.colors.background) {
 //                    Greeting("Android")
 //                }
-//            }
+//            }ConstraintLayoutContent
         }
     }
 }
@@ -424,5 +424,27 @@ fun ConstraintLayoutContent() {
 fun ConstraintLayoutContentPreview() {
     LayoutInJetpackComposeTheme {
         ConstraintLayoutContent()
+    }
+}
+
+@Composable
+fun LargeConstraintLayout() {
+    ConstraintLayout {
+        val text = createRef()
+        val guideline = createGuidelineFromStart(fraction = 0.5f)
+        Text(
+            "This is a very very very very very very long text",
+            Modifier.constrainAs(text) {
+                linkTo(start = guideline, end = parent.end)
+            }
+        )
+    }
+}
+
+@Preview
+@Composable
+fun LargeConstraintLayoutPreview() {
+    LayoutInJetpackComposeTheme {
+        LargeConstraintLayout()
     }
 }
