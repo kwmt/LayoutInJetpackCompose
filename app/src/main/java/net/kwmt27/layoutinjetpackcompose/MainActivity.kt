@@ -14,8 +14,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.preferredSize
-import androidx.compose.foundation.layout.preferredWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,7 +35,7 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Providers
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -103,7 +103,7 @@ fun PhotographerCard(modifier: Modifier = Modifier) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Surface(
-            modifier = Modifier.preferredSize(50.dp),
+            modifier = Modifier.size(50.dp),
             shape = CircleShape,
             color = MaterialTheme.colors.onSurface.copy(alpha = 0.2f)
         ) {
@@ -113,7 +113,7 @@ fun PhotographerCard(modifier: Modifier = Modifier) {
             modifier = Modifier.padding(start = 8.dp)
         ) {
             Text("Alfred Sisley", fontWeight = FontWeight.Bold)
-            Providers(LocalContentAlpha provides ContentAlpha.medium) {
+            CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                 Text("3 minutes ago", style = MaterialTheme.typography.body2)
             }
         }
@@ -200,11 +200,11 @@ fun Modifier.firstBaselineToTop(
     val firstBaseline = placeable[FirstBaseline]
 
     // Height of the composable with padding - first baseline
-    val placeableY = firstBaselineToTop.toIntPx() - firstBaseline
+    val placeableY = firstBaselineToTop.toPx() - firstBaseline
     val height = placeable.height + placeableY
-    layout(placeable.width, height) {
+    layout(placeable.width, height.toInt()) {
         //...
-        placeable.placeRelative(0, placeableY)
+        placeable.placeRelative(0, placeableY.toInt())
     }
 }
 
@@ -330,10 +330,10 @@ fun Chip(modifier: Modifier = Modifier, text: String) {
         ) {
             Box(
                 modifier = Modifier
-                    .preferredSize(16.dp, 16.dp)
+                    .size(16.dp, 16.dp)
                     .background(color = MaterialTheme.colors.secondary)
             )
-            Spacer(Modifier.preferredWidth(4.dp))
+            Spacer(Modifier.width(4.dp))
             Text(text = text)
         }
     }
